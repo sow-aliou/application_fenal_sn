@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: fenal_db
+    environment:
+      POSTGRES_DB: fenal
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  noyau-metier:
+    build: ./noyau-metier-springboot
+    container_name: fenal_backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/fenal
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+    depends_on:
+      - db
+
+  service-ia:
+    build: ./service-ia-fastapi
+    container_name: fenal_ia
+    ports:
+      - "8000:8000"
+
+  interface-web:
+    build: ./interface-web-react
+    container_name: fenal_web
+    ports:
+      - "3000:80"
+
+volumes:
+  postgres_data:

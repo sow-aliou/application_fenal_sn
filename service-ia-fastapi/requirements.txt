@@ -1,0 +1,1 @@
+fastapi\nuvicorn\nopencv-python-headless\npytesseract\nnumpy
