@@ -1,4 +1,4 @@
-package com.example.noyau_metier_springboot;
+package sn.fenal.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

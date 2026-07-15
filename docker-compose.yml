@@ -29,13 +29,15 @@ services:
     build: ./service-ia-fastapi
     container_name: fenal_ia
     ports:
-      - "8000:8000"
+      - "8001:8000"
 
   interface-web:
     build: ./interface-web-react
     container_name: fenal_web
     ports:
-      - "3000:80"
+      - "5176:5176"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
 
 volumes:
   postgres_data:
