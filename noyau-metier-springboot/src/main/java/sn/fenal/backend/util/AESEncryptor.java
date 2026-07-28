@@ -18,17 +18,19 @@ public class AESEncryptor implements AttributeConverter<String, String> {
     
     private static String secret;
 
-    @Value("${fenal.aes.secret:MySuperSecretKeyForAES256But16}")
+    private static final String ALGO = "AES/ECB/PKCS5Padding";
+
+    @Value("${fenal.aes.secret:1234567890123456}")
     public void setSecret(String secret) {
         AESEncryptor.secret = secret;
     }
 
     private Key getKey() {
-        if (secret == null) {
-            // Fallback for tests
-            secret = "MySuperSecretKeyForAES256But16";
+        if (secret == null || secret.length() != 16) {
+            // Fallback for tests (16 chars for AES-128)
+            secret = "1234567890123456";
         }
-        return new SecretKeySpec(secret.getBytes(), AES);
+        return new SecretKeySpec(secret.getBytes(), "AES");
     }
 
     @Override
@@ -37,7 +39,7 @@ public class AESEncryptor implements AttributeConverter<String, String> {
             return null;
         }
         try {
-            Cipher cipher = Cipher.getInstance(AES);
+            Cipher cipher = Cipher.getInstance(ALGO);
             cipher.init(Cipher.ENCRYPT_MODE, getKey());
             return Base64.getEncoder().encodeToString(cipher.doFinal(attribute.getBytes()));
         } catch (Exception e) {
@@ -51,7 +53,7 @@ public class AESEncryptor implements AttributeConverter<String, String> {
             return null;
         }
         try {
-            Cipher cipher = Cipher.getInstance(AES);
+            Cipher cipher = Cipher.getInstance(ALGO);
             cipher.init(Cipher.DECRYPT_MODE, getKey());
             return new String(cipher.doFinal(Base64.getDecoder().decode(dbData)));
         } catch (Exception e) {

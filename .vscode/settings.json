@@ -1,3 +1,4 @@
 {
-  "dart.flutterSdkPath": "/home/aliousow/development/flutter"
+  "dart.flutterSdkPath": "/home/aliousow/development/flutter",
+  "cmake.ignoreCMakeListsMissing": true
 }

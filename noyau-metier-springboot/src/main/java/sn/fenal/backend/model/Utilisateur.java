@@ -22,6 +22,10 @@ public abstract class Utilisateur {
     @Column(nullable = false)
     private String motDePasse;
     
+    private String resetOtp;
+    
+    private LocalDateTime otpExpiry;
+    
     private LocalDateTime dateCreation;
 
     @PrePersist
