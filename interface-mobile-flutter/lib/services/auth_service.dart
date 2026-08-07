@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   // Adresse IP de l'ordinateur sur le réseau local (Wi-Fi) pour un téléphone physique
-  static const String baseUrl = 'http://192.168.13.211:8080/api/auth';
+  static const String baseUrl = 'http://192.168.186.211:8080/api/auth';
 
   Future<Map<String, dynamic>> login(
       String telephone, String motDePasse) async {

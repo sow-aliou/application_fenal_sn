@@ -5,4 +5,5 @@ import sn.fenal.backend.model.Utilisateur;
 
 public interface UtilisateurRepository extends JpaRepository<Utilisateur, Integer> {
     Utilisateur findByTelephone(String telephone);
+    Utilisateur findByEmail(String email);
 }

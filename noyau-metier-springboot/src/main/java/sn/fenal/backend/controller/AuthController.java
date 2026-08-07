@@ -63,4 +63,26 @@ public class AuthController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("/profil/{id}")
+    public ResponseEntity<?> getProfil(@PathVariable Integer id) {
+        try {
+            Citoyen citoyen = utilisateurService.getCitoyenById(id);
+            citoyen.setMotDePasse(null); // sécurité
+            return ResponseEntity.ok(citoyen);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/profil/{id}")
+    public ResponseEntity<?> updateProfil(@PathVariable Integer id, @RequestBody sn.fenal.backend.dto.UpdateCitoyenRequest request) {
+        try {
+            Citoyen citoyen = utilisateurService.updateCitoyen(id, request);
+            citoyen.setMotDePasse(null); // sécurité
+            return ResponseEntity.ok(citoyen);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

@@ -7,7 +7,8 @@ import '../screens/home_screen.dart';
 import '../screens/forgot_password_screen.dart';
 import '../screens/reset_password_screen.dart';
 import '../screens/declaration_screen.dart';
-
+import '../screens/profile_screen.dart';
+import '../screens/settings_screen.dart';
 final appRouter = GoRouter(
   initialLocation: '/login',
   redirect: (context, state) async {
@@ -54,6 +55,14 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/declaration',
       builder: (context, state) => const DeclarationScreen(),
+    ),
+    GoRoute(
+      path: '/profile',
+      builder: (context, state) => const ProfileScreen(),
+    ),
+    GoRoute(
+      path: '/settings',
+      builder: (context, state) => const SettingsScreen(),
     ),
   ],
 );

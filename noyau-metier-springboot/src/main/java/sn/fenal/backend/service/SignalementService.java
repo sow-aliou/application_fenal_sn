@@ -23,6 +23,9 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.UUID;
 
+import sn.fenal.backend.model.AlertePerte;
+import sn.fenal.backend.repository.AlertePerteRepository;
+
 @Service
 public class SignalementService {
 
@@ -34,6 +37,9 @@ public class SignalementService {
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
+    
+    @Autowired
+    private AlertePerteRepository alertePerteRepository;
 
     private final String UPLOAD_DIR = "uploads/images/";
 
@@ -102,5 +108,32 @@ public class SignalementService {
         try (FileOutputStream fos = new FileOutputStream(UPLOAD_DIR + nomFichier)) {
             fos.write(decodedBytes);
         }
+    }
+
+    public java.util.List<DocumentRegalien> rechercherDocuments(TypeDocument type, String lieu) {
+        return documentRegalienRepository.findByFilters(type, lieu);
+    }
+    
+    public AlertePerte declarerDocumentPerdu(TypeDocument type, String nom, String lieu, Double latitude, Double longitude, Integer idUtilisateur, String description) throws Exception {
+        Utilisateur citoyen = utilisateurRepository.findById(idUtilisateur)
+                .orElseThrow(() -> new Exception("Utilisateur introuvable"));
+                
+        AlertePerte alerte = new AlertePerte();
+        alerte.setUtilisateur(citoyen);
+        alerte.setDateSignalement(LocalDateTime.now());
+        alerte.setLieu(lieu);
+        alerte.setDescription(description);
+        alerte.setTypeDocument(type);
+        alerte.setNomSurLeDocument(nom);
+        alerte.setEstVisible(true);
+        
+        if (latitude != null && longitude != null) {
+            GeometryFactory geometryFactory = new GeometryFactory();
+            Point localisation = geometryFactory.createPoint(new Coordinate(longitude, latitude));
+            localisation.setSRID(4326);
+            alerte.setLocalisation(localisation);
+        }
+        
+        return alertePerteRepository.save(alerte);
     }
 }

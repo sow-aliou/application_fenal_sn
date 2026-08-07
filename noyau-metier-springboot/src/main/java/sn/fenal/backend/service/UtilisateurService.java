@@ -13,7 +13,17 @@ public class UtilisateurService {
     @Autowired
     private UtilisateurRepository utilisateurRepository;
 
-    public Citoyen inscrireCitoyen(RegisterRequest request) {
+    public Citoyen inscrireCitoyen(RegisterRequest request) throws Exception {
+        if (utilisateurRepository.findByTelephone(request.getTelephone()) != null) {
+            throw new Exception("Ce numéro de téléphone est déjà associé à un compte.");
+        }
+
+        if (request.getEmail() != null && !request.getEmail().trim().isEmpty()) {
+            if (utilisateurRepository.findByEmail(request.getEmail()) != null) {
+                throw new Exception("Cet email est déjà associé à un compte.");
+            }
+        }
+
         // TODO: Hasher le mot de passe avec BCrypt dans une version future
         String passwordHash = request.getMotDePasse();
 
@@ -87,5 +97,28 @@ public class UtilisateurService {
         citoyen.setResetOtp(null);
         citoyen.setOtpExpiry(null);
         utilisateurRepository.save(citoyen);
+    }
+
+    public Citoyen getCitoyenById(Integer id) throws Exception {
+        return utilisateurRepository.findById(id)
+                .filter(u -> u instanceof Citoyen)
+                .map(u -> (Citoyen) u)
+                .orElseThrow(() -> new Exception("Citoyen non trouvé"));
+    }
+
+    public Citoyen updateCitoyen(Integer id, sn.fenal.backend.dto.UpdateCitoyenRequest request) throws Exception {
+        Citoyen citoyen = getCitoyenById(id);
+        
+        if (request.getNom() != null && !request.getNom().isEmpty()) {
+            citoyen.setNom(request.getNom());
+        }
+        if (request.getPrenom() != null && !request.getPrenom().isEmpty()) {
+            citoyen.setPrenom(request.getPrenom());
+        }
+        if (request.getEmail() != null) {
+            citoyen.setEmail(request.getEmail());
+        }
+        
+        return utilisateurRepository.save(citoyen);
     }
 }
